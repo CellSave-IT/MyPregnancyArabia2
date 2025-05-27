@@ -1,0 +1,60 @@
+
+{
+  "extends": ["airbnb-base", "plugin:prettier/recommended", "prettier", "eslint:recommended"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "tsconfig.json",
+    "ecmaVersion": 2021,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "impliedStrict": true,
+      "jsx": false
+    }
+  },
+  "plugins": ["prettier", "@typescript-eslint"],
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": "node_modules"
+      }
+    }
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "no-var": "error",
+    "quotes": ["error", "single"],
+    "semi": "off",
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "no-multi-spaces": "off",
+    "space-in-parent": "off",
+    "no-multiple-empty-lines": "off",
+    "prefer-const": "error",
+    "arrow-body-style": ["error", "as-needed"],
+    "@typescript-eslint/no-unsafe-call": 0,
+    "@typescript-eslint/no-unsafe-member-access": 0,
+    "@typescript-eslint/no-unsafe-assignment": 0,
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": false
+      }
+    ],
+    "import/no-unresolved": "off",
+    "import/newline-after-import": "off",
+    "no-unused-expressions": "off",
+    "import/prefer-default-export": "off",
+    "import/extensions": [
+      "off",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
+  }
+}

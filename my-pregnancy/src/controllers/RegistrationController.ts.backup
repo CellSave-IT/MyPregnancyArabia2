@@ -1,0 +1,116 @@
+import { response } from '../utils'
+import { Request, Response } from 'express'
+import { RegistrationService } from '../services'
+import { RegistrationValidation } from '../validations'
+import joi from 'joi'
+const service = RegistrationService
+const validation = RegistrationValidation
+
+export default {
+  get: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const params: any = req.query
+      const data = await service.get({
+        page: params.page || 1,
+        pageSize: params.pageSize || 10,
+        event: params?.event || null,
+      })
+      response.success({
+        res,
+        status: 200,
+        data: data,
+      })
+    } catch (err: any) {
+      response.error({
+        res,
+        message: err.message,
+        status: 500,
+      })
+    }
+  },
+
+  payment: async (req: Request, res: Response) => {
+    try {
+      const { value, error } = validation.validate(req.body)
+      if (!!error) {
+        response.error({
+          res,
+          message: error.details[0].message,
+          status: 422,
+          errors: error.details?.map((item) => item?.message),
+        })
+        return
+      } else {
+        const data = await service.payment(value)
+        response.success({
+          res,
+          status: 200,
+          data: data,
+        })
+      }
+    } catch (err: any) {
+      response.error({
+        res,
+        message: err.message,
+        status: 500,
+      })
+    }
+  },
+  check: async (req: Request, res: Response) => {
+    try {
+      const validationSchema = joi.object<any>({
+        ref: joi.string().required(),
+      })
+      const { value, error } = validationSchema.validate(req.body)
+      if (!!error) {
+        response.error({
+          res,
+          message: error.details[0].message,
+          status: 422,
+          errors: error.details?.map((item) => item?.message),
+        })
+        return
+      } else {
+        const data = await service.check(value)
+        response.success({
+          res,
+          status: 200,
+          data: data,
+        })
+      }
+    } catch (err: any) {
+      response.error({
+        res,
+        message: err.message,
+        status: 500,
+      })
+    }
+  },
+  store: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { value, error } = validation.validate(req.body)
+      if (!!error) {
+        response.error({
+          res,
+          message: error.details[0].message,
+          status: 422,
+          errors: error.details?.map((item) => item?.message),
+        })
+        return
+      } else {
+        const data = await service.store(value)
+        response.success({
+          res,
+          status: 200,
+          data: data,
+        })
+      }
+    } catch (err: any) {
+      response.error({
+        res,
+        message: err.message,
+        status: 500,
+      })
+    }
+  },
+}

@@ -1,0 +1,47 @@
+import nodemailer from 'nodemailer'
+import fs from 'fs'
+import path from 'path'
+const sendMail = async ({ to, subject, message = '', html = null }, from: any = null) => {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 485,
+    secure: true,
+    auth: {
+      user: 'rsvp@mypregnancyarabia.com',
+      pass: 'pmrv czfs ygyr xqfm',
+    },
+  })
+  let mailOptions: any = {
+    from: !!from
+      ? from
+      : {
+          name: 'My Pregnancy',
+          address: 'rsvp@mypregnancyarabia.com',
+        },
+    to: [to],
+    subject: subject,
+  }
+  if (!!html) {
+    if (html.includes('<html>')) {
+      mailOptions = { ...mailOptions, html: html };
+    }else{
+      const emailTemplatePath = path.join(__dirname, '../../templates', html)
+      const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf-8')
+      mailOptions = { ...mailOptions, html: emailTemplate }
+    }
+  } else {
+    mailOptions = { ...mailOptions, text: message }
+  }
+  return transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error)
+    } else {
+      console.log('Email sent: ' + info.response)
+    }
+  })
+}
+ 
+export default sendMail
+ 
+ 

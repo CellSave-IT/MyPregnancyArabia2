@@ -1,0 +1,142 @@
+<html>
+  <head>
+    <title></title>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+  </head>
+  <body style="word-spacing: normal; background-color: #ffffff">
+    <div class="root-container" id="bodyTable" style="background-color: #ffffff">
+      <div class="root-container-spacing">
+        <table border="1" cellspacing="0" cellpadding="0" width="100%" style="width:100%; background:white; border:none; border-bottom: solid #d4d4d4 1.0pt;">
+          <tbody>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">First Name</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.fName}</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Last Name</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.lName}</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Nationality</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.nationality}</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Country of Residence</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">{{ country_of_residence }}</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Are you pregnant?</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.isPregnant}</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Due date</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.dueDate}</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Select your delivery hospital</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                <ul style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">
+                  <li>${data?.deliveryHospital}</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Your doctor's name</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.doctorName}</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Your email address</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">
+                  <a href="mailto:${data?.email}" target="_blank">${data?.email}</a>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Your phone number</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.phoneNo}</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">How did you hear about us?</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.description}</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Did you attend to any of our previous events?</p>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.previousAttend}</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

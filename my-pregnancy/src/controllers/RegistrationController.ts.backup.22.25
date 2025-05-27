@@ -1,0 +1,277 @@
+import { response } from '../utils'
+import { Request, Response } from 'express'
+import { RegistrationService } from '../services'
+import { RegistrationValidation } from '../validations'
+import joi from 'joi'
+import sendMail from '../utils/sendMail'
+const service = RegistrationService
+const validation = RegistrationValidation
+
+export default {
+  get: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const params: any = req.query
+      const data = await service.get({
+        page: params.page || 1,
+        pageSize: params.pageSize || 10,
+        event: params?.event || null,
+      })
+      response.success({
+        res,
+        status: 200,
+        data: data,
+      })
+    } catch (err: any) {
+      response.error({
+        res,
+        message: err.message,
+        status: 500,
+      })
+    }
+  },
+
+  payment: async (req: Request, res: Response) => {
+    try {
+      const { value, error } = validation.validate(req.body)
+      if (!!error) {
+        response.error({
+          res,
+          message: error.details[0].message,
+          status: 422,
+          errors: error.details?.map((item) => item?.message),
+        })
+        return
+      } else {
+        const data = await service.payment(value)
+        response.success({
+          res,
+          status: 200,
+          data: data,
+        })
+      }
+    } catch (err: any) {
+      response.error({
+        res,
+        message: err.message,
+        status: 500,
+      })
+    }
+  },
+  check: async (req: Request, res: Response) => {
+    try {
+      const validationSchema = joi.object<any>({
+        ref: joi.string().required(),
+      })
+      const { value, error } = validationSchema.validate(req.body)
+      if (!!error) {
+        response.error({
+          res,
+          message: error.details[0].message,
+          status: 422,
+          errors: error.details?.map((item) => item?.message),
+        })
+        return
+      } else {
+        const data = await service.check(value)
+        response.success({
+          res,
+          status: 200,
+          data: data,
+        })
+      }
+    } catch (err: any) {
+      response.error({
+        res,
+        message: err.message,
+        status: 500,
+      })
+    }
+  },
+  store: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { value, error } = validation.validate(req.body)
+      if (!!error) {
+        response.error({
+          res,
+          message: error.details[0].message,
+          status: 422,
+          errors: error.details?.map((item) => item?.message),
+        })
+        return
+      } else {      
+        const data = await service.store(value)
+        await sendMail({
+          to: data?.email,
+          subject: 'Event Registration',
+          html: 'register-email-template.html',
+        })
+          await sendMail(
+            {
+              to: 'rsvp@mypregnancyarabia.com',
+              subject: 'Registration',
+              html: `<html>
+                      <head>
+                        <title></title>
+                        <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+                        <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+                        <meta content="width=device-width, initial-scale=1" name="viewport" />
+                      </head>
+                      <body style="word-spacing: normal; background-color: #ffffff">
+                        <div class="root-container" id="bodyTable" style="background-color: #ffffff">
+                          <div class="root-container-spacing">
+                            <table border="1" cellspacing="0" cellpadding="0" width="100%" style="width:100%; background:white; border:none; border-bottom: solid #d4d4d4 1.0pt;">
+                              <tbody>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                                    <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">First Name</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                                    <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.fName}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                                    <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Last Name</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                                    <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.lName}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                                    <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Nationality</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                                    <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.nationality}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                                    <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Country of Residence</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                                    <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">{{ country_of_residence }}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                                    <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Are you pregnant?</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                                    <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.isPregnant}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                                    <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Due date</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                                    <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.dueDate}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                                    <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Select your delivery hospital</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                                    <ul style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">
+                                      <li>${data?.deliveryHospital}</li>
+                                    </ul>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                                    <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Your doctor's name</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                                    <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.doctorName}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                                    <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Your email address</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                                    <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">
+                                      <a href="mailto:${data?.email}" target="_blank">${data?.email}</a>
+                                    </p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                                    <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Your phone number</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                                    <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.phoneNo}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                                    <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">How did you hear about us?</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                                    <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.description}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #efefef; padding: 6.0pt;">
+                                    <p style="font-size: 11.5pt; font-family: 'Helvetica', sans-serif; color: #282828; font-weight: bold;">Did you attend to any of our previous events?</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td valign="top" style="border: solid #d4d4d4 1.0pt; background: #fcfcfc; padding: 6.0pt;">
+                                    <p style="font-size: 10.5pt; line-height: 130%; font-family: 'Helvetica', sans-serif; color: #282828;">${data?.previousAttend}</p>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </body>
+                    </html>
+                `,
+            },
+            {
+              name: `${data?.fName} ${data?.lName}`,
+              address: data?.email,
+            }
+          )
+       
+        response.success({
+          res,
+          status: 200,
+          data: data,
+        })
+      }
+    } catch (err: any) {
+      response.error({
+        res,
+        message: err.message,
+        status: 500,
+      })
+    }
+  },
+}
+

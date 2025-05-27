@@ -1,0 +1,160 @@
+import { response } from '../utils'
+import { Request, Response } from 'express'
+import { RegistrationService } from '../services'
+import { RegistrationValidation } from '../validations'
+import joi from 'joi'
+import sendMail from '../utils/sendMail'
+const service = RegistrationService
+const validation = RegistrationValidation
+const fs = require('fs');
+const path = require('path');
+
+export default {
+  get: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const params: any = req.query
+      const data = await service.get({
+        page: params.page || 1,
+        pageSize: params.pageSize || 10,
+        event: params?.event || null,
+      })
+      response.success({
+        res,
+        status: 200,
+        data: data,
+      })
+    } catch (err: any) {
+      response.error({
+        res,
+        message: err.message,
+        status: 500,
+      })
+    }
+  },
+
+  payment: async (req: Request, res: Response) => {
+    try {
+      const { value, error } = validation.validate(req.body)
+      if (!!error) {
+        response.error({
+          res,
+          message: error.details[0].message,
+          status: 422,
+          errors: error.details?.map((item) => item?.message),
+        })
+        return
+      } else {
+        const data = await service.payment(value)
+        response.success({
+          res,
+          status: 200,
+          data: data,
+        })
+      }
+    } catch (err: any) {
+      response.error({
+        res,
+        message: err.message,
+        status: 500,
+      })
+    }
+  },
+  check: async (req: Request, res: Response) => {
+    try {
+      const validationSchema = joi.object<any>({
+        ref: joi.string().required(),
+      })
+      const { value, error } = validationSchema.validate(req.body)
+      if (!!error) {
+        response.error({
+          res,
+          message: error.details[0].message,
+          status: 422,
+          errors: error.details?.map((item) => item?.message),
+        })
+        return
+      } else {
+        const data = await service.check(value)
+        response.success({
+          res,
+          status: 200,
+          data: data,
+        })
+      }
+    } catch (err: any) {
+      response.error({
+        res,
+        message: err.message,
+        status: 500,
+      })
+    }
+  },
+  store: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { value, error } = validation.validate(req.body)
+      if (!!error) {
+        response.error({
+          res,
+          message: error.details[0].message,
+          status: 422,
+          errors: error.details?.map((item) => item?.message),
+        })
+        return
+      } else {      
+        const data = await service.store(value)
+        // const emailTemplate = fs.readFileSync(path.join(__dirname, '/templates/register-email-template-admin.html'), 'utf8');
+        // console.log(emailTemplate);
+        await sendMail({
+          to: data?.email,
+          subject: 'Event Registration',
+          html: 'register-email-template.html',
+        })
+          await sendMail(
+            {
+              to: 'rsvp@mypregnancyarabia.com',
+              subject: 'Registration',
+              html: `<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Registration Details</title>
+</head>
+<body style="font-family: Helvetica, sans-serif; background-color: #ffffff; color: #282828; padding: 20px;">
+  <table border="1" cellspacing="0" cellpadding="8" width="100%" style="border-collapse: collapse; max-width: 600px; margin: auto;">
+    <tr><th align="left">First Name</th><td>${data?.fName}</td></tr>
+    <tr><th align="left">Last Name</th><td>${data?.lName}</td></tr>
+    <tr><th align="left">Nationality</th><td>${data?.nationality}</td></tr>
+    <tr><th align="left">Are you pregnant?</th><td>${data?.isPregnant}</td></tr>
+    <tr><th align="left">Due Date</th><td>${data?.dueDate}</td></tr>
+    <tr><th align="left">Delivery Hospital</th><td>${data?.deliveryHospital}</td></tr>
+    <tr><th align="left">Doctor's Name</th><td>${data?.doctorName}</td></tr>
+    <tr><th align="left">Email</th><td><a href="mailto:${data?.email}">${data?.email}</a></td></tr>
+    <tr><th align="left">Phone Number</th><td>${data?.phoneNo}</td></tr>
+    <tr><th align="left">How did you hear about us?</th><td>${data?.description}</td></tr>
+    <tr><th align="left">Previously Attended?</th><td>${data?.previousAttend}</td></tr>
+  </table>
+</body>
+</html>
+                `,
+            },
+            {
+              name: `${data?.fName} ${data?.lName}`,
+              address: data?.email,
+            }
+          )
+       
+        response.success({
+          res,
+          status: 200,
+          data: data,
+        })
+      }
+    } catch (err: any) {
+      response.error({
+        res,
+        message: err.message,
+        status: 500,
+      })
+    }
+  },
+}
+
