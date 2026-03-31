@@ -1,4 +1,4 @@
-import { HashRouter as BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import PrivateLayout from './components/layouts/PrivateLayout'
 import PublicLayout from './components/layouts/PublicLayout'
 import { adminPublicRoutes, privateRoutes, publicRoutes } from './routes'
